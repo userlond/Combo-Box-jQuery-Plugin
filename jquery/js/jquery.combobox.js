@@ -12,12 +12,12 @@
 (function () {
 
     jQuery.fn.combobox = function (selectOptions) {
-    
+
         return this.each(function () {
             var newCombobox = new Combobox(this, selectOptions);
             jQuery.combobox.instances.push(newCombobox);
         });
-    
+
     };
 
     jQuery.combobox = {
@@ -65,7 +65,7 @@
             var thisCombobox = this;
             this.textInputElement.keyup(function (event) {
                 if (event.keyCode == Combobox.keys.TAB
-                    || event.keyCode == Combobox.keys.SHIFT) 
+                    || event.keyCode == Combobox.keys.SHIFT)
                 {
                     return;
                 }
@@ -83,7 +83,7 @@
                 thisCombobox.selector.show()
             });
         },
-        
+
         setValue : function (value) {
             var oldValue = this.textInputElement.val();
             this.textInputElement.val(value);
@@ -95,11 +95,11 @@
         getValue : function () {
             return this.textInputElement.val();
         },
-        
+
         focus : function () {
-            this.textInputElement.trigger('focus');        	
+            this.textInputElement.trigger('focus');
         }
-        
+
     };
 
     Combobox.keys = {
@@ -146,7 +146,7 @@
                 thisSelector.hide();
             }
         }
-        
+
     };
 
 
@@ -166,7 +166,7 @@
             this.selectedIndex = -1;
             var i;
             for (i=0; i < this.allSelectOptions.length; i++) {
-                if (! startingLetters.length 
+                if (! startingLetters.length
                     || this.allSelectOptions[i].toLowerCase().indexOf(startingLetters.toLowerCase()) === 0)
                 {
                     selectOptions.push(this.allSelectOptions[i]);
@@ -175,12 +175,14 @@
             this.optionCount = selectOptions.length;
             var ulElement = jQuery('<ul></ul>').appendTo(this.selectorElement);
             for (i = 0; i < selectOptions.length; i++) {
-                ulElement.append('<li>'+selectOptions[i]+'</li>');
+                ulElement.append(jQuery('<li/>', {
+                    text: selectOptions[i]
+                }));
             }
             var thisSelector = this;
             this.selectorElement.find('li').click(function (e) {
                 thisSelector.hide();
-                thisSelector.combobox.setValue(this.innerHTML);
+                thisSelector.combobox.setValue(jQuery(this).text());
                 thisSelector.combobox.focus();
             });
             this.selectorElement.mouseover(function (e) {
@@ -227,7 +229,7 @@
             }
             this.select(newSelectedIndex);
         },
-        
+
         select : function (index) {
             this.unselect();
         	this.selectorElement.find('li:eq('+index+')').addClass('selected');
@@ -238,10 +240,10 @@
         	this.selectorElement.find('li').removeClass('selected');
         	this.selectedIndex = -1;
         },
-        
+
         getSelectedValue : function () {
             if(this.selectedIndex !== -1){
-                return this.selectorElement.find('li').get(this.selectedIndex).innerHTML;
+                return jQuery(this.selectorElement.find('li').get(this.selectedIndex)).text();
             } else {
                 return this.combobox.textInputElement.val();
             }
